@@ -1,0 +1,102 @@
+# Power Query & Dynamic Tables in Excel
+## FP&A Practice — README
+ 
+---
+ 
+### Overview
+ 
+This module covers how Dynamic Tables and Microsoft Power Query work together to create
+seamless connections between backend raw data and FP&A business and operating models.
+Power Query is accessed via the Data ribbon in Excel under "Get & Transform Data" and
+"Queries & Connections."
+ 
+---
+ 
+### Key Concepts Covered
+ 
+1. CONNECTING TO BACKEND DATA
+   - Use Data > Get Data to connect to multiple source types:
+     Files: Excel Workbook, CSV, XML, JSON, PDF, SharePoint folder
+     Databases: SQL, Oracle, and other backend systems
+     Cloud: Azure, Power Platform, Power BI, online services
+   - For FP&A purposes, CSV exports from an ERP system are a common source.
+ 
+2. POWER QUERY EDITOR
+   - Selecting "Transform Data" opens the Power Query Editor before loading.
+   - Key ribbon options available:
+     Home    : Keep/remove columns and rows, sort, merge/append queries
+     Transform : Reformat, split, merge columns; extract data; apply math operations
+     Add Column: Add conditional columns, custom formulas, date/time fields
+ 
+3. LOADING DATA INTO EXCEL
+   When closing the Power Query Editor, use "Close & Load To" for control over output:
+   - Table Format       : Loads data into a Dynamic Table in the workbook
+   - Pivot Table Report : Connects directly to a Pivot Table (bypasses the sheet body)
+   - Pivot Chart        : Connects directly to a chart/graph visual
+   - Only Create Connection : Links the file without loading data into the sheet
+   - Add to Data Model  : Enables use with Power Pivot or Power BI
+ 
+4. DYNAMIC TABLES & STRUCTURED REFERENCES
+   - Data loaded as a Table is named automatically (e.g., Sales_Data_Through_July_CSV).
+   - The Name Manager (Formula ribbon) tracks all named table references.
+   - Formulas like SUMIFS reference the table using structured syntax:
+     Example: =SUMIFS(TableName[OrderTotal], TableName[OrderType], "Retail")
+   - These structured references automatically expand as new data is added —
+     no formula breakage when the dataset grows.
+ 
+5. APPENDING MULTIPLE DATA SOURCES
+   - Multiple queries (e.g., July sales + August sales) can be combined using Append.
+   - Append concatenates rows from two tables into a single unified table.
+   - The resulting Append query updates dynamically when source files are refreshed.
+   - Example result: July (4,783 rows) + August (193 rows) = Appended table (4,976 rows)
+ 
+---
+ 
+### Practical Workflow Summary
+ 
+   Step 1 : Get Data > From File > From Text/CSV (e.g., ERP export)
+   Step 2 : Click "Transform Data" to open Power Query Editor
+   Step 3 : Clean/shape the data as needed (rename columns, filter rows, etc.)
+   Step 4 : Close & Load To > Table — data loads into a Dynamic Table
+   Step 5 : Import additional data files and append them to the existing query
+   Step 6 : Use SUMIFS (or other formulas) with structured table references
+   Step 7 : Refresh queries when source data is updated — totals update automatically
+ 
+---
+ 
+### Why This Matters for FP&A
+ 
+- Eliminates manual copy-paste of ERP or system data into models.
+- Dynamic Tables + Power Query ensure formulas never break when data volumes change.
+- Append queries allow incremental data loads (e.g., adding each new month of actuals).
+- Forms the foundation for connecting Excel models to Power BI for reporting.
+ 
+---
+ 
+### Files in This Repository
+ 
+   /data          Raw source data files (CSV exports, ERP data)
+   /models        Excel FP&A models using Power Query connections
+   /dashboards    Tableau or Excel dashboard files
+   /readme        Documentation and learning notes
+ 
+---
+ 
+### Tools Used
+ 
+   - Microsoft Excel (Power Query, Dynamic Tables, SUMIFS)
+   - Power BI (optional extension of this workflow)
+   - Tableau Public (for visualization practice)
+ 
+---
+ 
+### Notes & Further Learning
+ 
+- Power Query is embedded in Excel's Data ribbon — it does not require a separate install.
+- For deeper Power Query functionality, explore LinkedIn Learning courses or
+  Microsoft's official documentation at: https://learn.microsoft.com/en-us/power-query/
+- The same Power Query logic applies in Power BI Desktop.
+ 
+---
+ 
+Last Updated: 2026
