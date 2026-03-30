@@ -1,0 +1,140 @@
+# FP&A Applications with Data Tables in Excel
+## FP&A Practice — README
+
+---
+
+### Overview
+
+This module covers how to restructure and import raw data into a usable format for
+FP&A models using Excel Dynamic Tables and a technique called Data Mapping. The goal
+is to eliminate time spent manually reformatting data and instead build models that
+update automatically as new data comes in.
+
+---
+
+### Key Concepts Covered
+
+1. THE FP&A DATA PROBLEM
+   - FP&A professionals historically spent excessive time "teeing up" data using
+     text functions such as CLEAN, TRIM, LEFT, RIGHT, and MID.
+   - The modern approach: build the output model or forecast first, then use a
+     Dynamic Table as the intermediary layer between raw data and the model.
+   - Data can be brought in manually or via Power Query (see Power Query README).
+
+2. DATA MAPPING
+   - Data mapping is a technique that keeps transformation formulas separate from
+     the business model's line items.
+   - Benefits:
+       Keeps model formulas clean, auditable, and easy to update.
+       Allows formulas to be copied and pasted without manual updates.
+       Decouples the raw data layer from the reporting/forecast layer.
+   - Data mapping formulas are typically placed at the bottom of the financial
+     statements worksheet, away from the model's visible output rows.
+
+3. DYNAMIC DATE HEADERS
+   - Year headers (e.g., 2017, 2018) are placed in a mapping row and referenced
+     dynamically throughout the model.
+   - The DATE function is used to derive start and end dates for each year:
+       Start Date: =DATE(year, 1, 1)   → January 1st of that year
+       End Date:   =DATE(year, 12, 31) → December 31st of that year
+   - These dates are also stored as serial numbers (numeric format) to be used
+     as criteria in SUMIFS formulas.
+   - As new year columns are added, headers and date formulas copy across
+     without any manual formula updates.
+
+4. DYNAMIC TABLES AS DATA SOURCES
+   - Raw data (e.g., US Sales by Region) is stored in a named Dynamic Table.
+   - Example table name: US_Sales_by_Region_Data
+   - Structured references (TableName[ColumnName]) are used in all formulas,
+     ensuring integrity regardless of how many rows the data grows to.
+   - Use Ctrl + Shift + Spacebar inside a table to confirm its name in the
+     Name Box.
+
+5. SUMIFS WITH DYNAMIC DATE RANGES
+   - SUMIFS is used to pull period-specific totals from the Dynamic Table into
+     the financial model.
+   - Formula structure:
+       =SUMIFS(
+           TableName[OrderTotal],          -- Sum range
+           TableName[OrderDate], ">="&E75, -- Greater than or equal to start date
+           TableName[OrderDate], "<="&E76  -- Less than or equal to end date
+       )
+   - E75 and E76 reference the dynamic start and end date headers respectively.
+   - This means the formula automatically returns the correct year's data
+     based solely on which year is in the column header.
+
+6. COPY-PASTE SCALABILITY
+   - Because all references are dynamic (table names, date headers, serial numbers),
+     formulas can be copied directly to the right to populate the next year.
+   - No formula edits required — the year header drives everything.
+   - Example results validated by manual filter-and-sum QC check:
+       2017: $985,671
+       2018: $1,013,073
+
+---
+
+### Practical Workflow Summary
+
+   Step 1 : Set up year headers in a data mapping section (bottom of the worksheet).
+   Step 2 : Build dynamic DATE formulas for start and end of each year.
+   Step 3 : Store raw/ERP data in a named Dynamic Table on a separate worksheet.
+   Step 4 : Write SUMIFS formulas in the data mapping section referencing the
+            Dynamic Table and dynamic date headers.
+   Step 5 : Link mapped totals up to the appropriate model line items.
+   Step 6 : QC results by filtering the source table and comparing the sum.
+   Step 7 : Copy formulas to the right to populate additional years automatically.
+
+---
+
+### Why This Matters for FP&A
+
+- Saves significant time — no manual data reformatting when actuals are updated.
+- Models remain auditable: formulas are clean, structured, and traceable.
+- Scales easily — adding a new year requires only copying a column, not rebuilding.
+- Builds the right habits: thinking about the end state before building the model.
+- Foundation for connecting Excel models to Power Query and Power BI pipelines.
+
+---
+
+### Key Excel Functions Used
+
+   SUMIFS       : Conditional sum across multiple criteria ranges
+   DATE         : Builds a date value from year, month, and day inputs
+   Structured References : TableName[ColumnName] syntax for Dynamic Table ranges
+   Name Manager : Tracks all named tables and ranges in the workbook
+
+---
+
+### QC Best Practice
+
+Always validate data mapping formulas by:
+   1. Filtering the source Dynamic Table by the relevant year or criteria.
+   2. Summing the filtered column manually.
+   3. Comparing the result to the formula output in the model.
+
+---
+
+### Files in This Repository
+
+   /data          Raw source data files (CSV exports, ERP data)
+   /models        Excel FP&A models with data mapping and Dynamic Tables
+   /dashboards    Tableau or Excel dashboard files
+   /readme        Documentation and learning notes
+
+---
+
+### Tools Used
+
+   - Microsoft Excel (Dynamic Tables, SUMIFS, DATE, Power Query)
+   - Power BI (optional extension of this workflow)
+   - Tableau Public (for visualization practice)
+
+---
+
+### Related README Files
+
+   - README_Power_Query.txt  : How to connect and append backend data using Power Query
+
+---
+
+Last Updated: 2026
